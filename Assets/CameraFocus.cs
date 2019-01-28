@@ -6,10 +6,10 @@ using UnityEngine;
 public class CameraFocus : MonoBehaviour {
 
     public Camera MainCamera;
-    public GameObject Cube0;
-    public GameObject Cube1;
-    public GameObject Cube2;
-    public GameObject Cube3;
+    public GameObject White;
+    public GameObject Red;
+    public GameObject Green;
+    public GameObject Blue;
 
     public float moveTime = 0.5f;
 
@@ -20,44 +20,42 @@ public class CameraFocus : MonoBehaviour {
     private bool val2 = false;
     private bool val3 = false;
 
-    private Vector3 start = Vector3.zero;
-    private Vector3 end = Vector3.zero;
+    private Vector3? start = null;
+    private Vector3? end = null;
     private float movingTime = 0.0f;
 
 	void Update () {
-        if (start == Vector3.zero) return;
+        if (start == null) return;
 
         movingTime += Time.deltaTime;
-        MainCamera.transform.position = Vector3.Slerp(start, end, (movingTime / moveTime));
+        MainCamera.transform.position = Vector3.Slerp(start.Value, end.Value, (movingTime / moveTime));
 
         if (moveTime < movingTime)
         {
-            MainCamera.transform.position = end;
-            start = Vector3.zero;
-            end = Vector3.zero;
+            MainCamera.transform.position = end.Value;
+            start = null;
+            end = null;
         }
     }
 
     private void OnGUI()
     {
-        val0 = GUI.Toggle(new Rect(Screen.width - 100, 10, 90, 20), val0, "Cube0");
-        val1 = GUI.Toggle(new Rect(Screen.width - 100, 30, 90, 20), val1, "Cube1");
-        val2 = GUI.Toggle(new Rect(Screen.width - 100, 50, 90, 20), val2, "Cube2");
-        val3 = GUI.Toggle(new Rect(Screen.width - 100, 70, 90, 20), val3, "Cube3");
+        val0 = GUI.Toggle(new Rect(Screen.width - 100, 10, 90, 20), val0, "White");
+        val1 = GUI.Toggle(new Rect(Screen.width - 100, 30, 90, 20), val1, "Red");
+        val2 = GUI.Toggle(new Rect(Screen.width - 100, 50, 90, 20), val2, "Blue");
+        val3 = GUI.Toggle(new Rect(Screen.width - 100, 70, 90, 20), val3, "Green");
         var btn = GUI.Button(new Rect(Screen.width - 100, 90, 90, 20), "Focus");
-        if (btn) OnFocus();
-    }
+        if (btn)
+        {
+            var targets = new List<GameObject>();
+            if (val0) targets.Add(White);
+            if (val1) targets.Add(Red);
+            if (val2) targets.Add(Blue);
+            if (val3) targets.Add(Green);
+            if (targets.Count == 0) return;
 
-    private void OnFocus()
-    {
-        var targets = new List<GameObject>();
-        if (val0) targets.Add(Cube0);
-        if (val1) targets.Add(Cube1);
-        if (val2) targets.Add(Cube2);
-        if (val3) targets.Add(Cube3);
-        if (targets.Count == 0) return;
-
-        this.Focus(MainCamera, targets);
+            this.Focus(MainCamera, targets);
+        }
     }
 
     public void Focus(Camera camera, List<GameObject> targets)
