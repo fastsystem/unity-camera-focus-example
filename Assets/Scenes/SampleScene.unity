@@ -191,6 +191,7 @@ GameObject:
   m_Component:
   - component: {fileID: 453334628}
   - component: {fileID: 453334629}
+  - component: {fileID: 453334630}
   m_Layer: 0
   m_Name: CameraFocus
   m_TagString: Untagged
@@ -224,13 +225,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03fabc8165367114082d22ea4ef55445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveTime: 0.5
+  defautDistance: 5
+--- !u!114 &453334630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 453334627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73285ebf257c42940b1dea2b90510801, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   MainCamera: {fileID: 534669904}
   White: {fileID: 691301694}
   Red: {fileID: 1476912301}
   Green: {fileID: 1668987468}
   Blue: {fileID: 2082445628}
-  moveTime: 0.5
-  defautDistance: 5
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,7 +355,7 @@ GameObject:
   - component: {fileID: 691301696}
   - component: {fileID: 691301695}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: White
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -476,7 +489,7 @@ GameObject:
   - component: {fileID: 1476912303}
   - component: {fileID: 1476912302}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -567,7 +580,7 @@ GameObject:
   - component: {fileID: 1668987470}
   - component: {fileID: 1668987469}
   m_Layer: 0
-  m_Name: Cube (2)
+  m_Name: Green
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -658,7 +671,7 @@ GameObject:
   - component: {fileID: 2082445630}
   - component: {fileID: 2082445629}
   m_Layer: 0
-  m_Name: Cube (3)
+  m_Name: Blue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
