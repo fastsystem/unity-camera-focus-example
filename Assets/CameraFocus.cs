@@ -55,7 +55,20 @@ public class CameraFocus : MonoBehaviour {
         if (val1) targets.Add(Cube1);
         if (val2) targets.Add(Cube2);
         if (val3) targets.Add(Cube3);
-        var targetPositons = targets.Select(x => x.transform.position).ToList();
+        if (targets.Count == 0) return;
+
+        this.Focus(MainCamera, targets);
+    }
+
+    public void Focus(Camera camera, List<GameObject> targets)
+    {
+        // 物体が１つの場合は対象の点を１つにする
+        List<Vector3> targetPositons = new List<Vector3>();
+        if (1 == targets.Count)
+            targetPositons.Add(targets[0].transform.position);
+        else
+            foreach (var t in new Vector3[] { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back })
+                targetPositons.AddRange(targets.Select(x => x.transform.position + t));
 
         // すべての物体の中心位置を取得
         var targetCenter = new Vector3(
@@ -75,7 +88,7 @@ public class CameraFocus : MonoBehaviour {
 
             // 仮想座標：評価線(カメラ->各オブジェクトの中心)
             var hyoukasen = new List<Vector3>();
-            foreach(var tp in targetPositons)
+            foreach (var tp in targetPositons)
             {
                 var line = kizyunsen + (tp - targetCenter);
                 // Debug.Log(string.Format("kizyun={0} line={1} angle={2}", kizyunsen, line, Vector3.Angle(kizyunsen, line)));
@@ -86,30 +99,19 @@ public class CameraFocus : MonoBehaviour {
             var angles = hyoukasen.Select(x => Vector3.Angle(kizyunsen, x)).ToList();
 
             // 仮想座標上で距離を決定
-            v_distance = v_distance / MainCamera.fieldOfView * (angles.Max() * 2.5f);
+            v_distance = v_distance / camera.fieldOfView * (angles.Max() * 2.0f);
             // 仮想座標上で距離を決定（補正してみる）
-            // var cen_distance = (targetCenter - MainCamera.transform.position).magnitude;
-            // var min_distance = targetPositons.Select(x => (x - MainCamera.transform.position).magnitude).Min();
+            // var cen_distance = (targetCenter - camera.transform.position).magnitude;
+            // var min_distance = targetPositons.Select(x => (x - camera.transform.position).magnitude).Min();
             // v_distance = v_distance + (cen_distance - min_distance);
             // Debug.Log(string.Format("v_distance={0}", v_distance));
         }
 
         // カメラの移動先を設定
-        var relative = MainCamera.transform.TransformPoint(new Vector3(0, 0, v_distance));
-        // Debug.Log(string.Format("{0} {1}", MainCamera.transform.position, relative));
-        this.start = MainCamera.transform.position;
-        this.end = targetCenter - (relative - MainCamera.transform.position);
+        var relative = camera.transform.TransformPoint(new Vector3(0, 0, v_distance));
+        // Debug.Log(string.Format("{0} {1}", camera.transform.position, relative));
+        this.start = camera.transform.position;
+        this.end = targetCenter - (relative - camera.transform.position);
         this.movingTime = 0.0f;
-    }
-
-    /// <summary>
-    /// グローバル座標系で動いたときのローカル座標の移動量を取得する
-    /// </summary>
-    /// <param name="targetPos"></param>
-    /// <returns></returns>
-    public Vector3 GetCameraRelativePostion(Vector3 targetPos)
-    {
-        var dire = targetPos - MainCamera.transform.position;
-        return MainCamera.transform.InverseTransformDirection(dire);
     }
 }
